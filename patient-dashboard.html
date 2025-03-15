@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Reminder - หน้าหลัก</title>
+    <style>
+        :root {
+            --primary-color: #00A19A;
+            --primary-light: #E8F5F4;
+            --primary-dark: #008F88;
+            --light-yellow: #FFF9E6;
+            --light-green: #E8F5E9;
+            --light-red: #FFEBEE;
+            --green: #4CAF50;
+            --yellow: #FFC107;
+            --red: #F44336;
+            --gray-light: #F5F5F5;
+            --gray: #E0E0E0;
+            --text-dark: #333333;
+            --text-medium: #666666;
+            --text-light: #999999;
+            --white: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Kanit', sans-serif;
+        }
+        
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            background-color: var(--white);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+        
+        .logo-icon {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .app-name {
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .username {
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        
+        .logout-btn {
+            background-color: white;
+            color: var(--primary-color);
+            border: none;
+            border-radius: 20px;
+            padding: 5px 15px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background-color: var(--white);
+            border-bottom: 1px solid var(--gray);
+            width: 100%;
+        }
+        
+        .nav-tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+            color: var(--text-medium);
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+        }
+        
+        .nav-tab.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            font-weight: 500;
+        }
+        
+        main {
+            padding: 20px;
+            flex: 1;
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .welcome-text {
+            font-size: 14px;
+            color: var(--text-medium);
+            margin-bottom: 20px;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+        
+        .stat-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            border: 1px solid var(--gray);
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-medium);
+        }
+        
+        .stat-sublabel {
+            font-size: 10px;
+            color: var(--text-light);
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .section-date {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .medication-timeline {
+            position: relative;
+            margin-left: 15px;
+            width: calc(100% - 15px);
+        }
+        
+        .timeline-line {
+            position: absolute;
+            left: 12px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--gray);
+            transform: translateX(-50%);
+        }
+        
+        .medication-card {
+            position: relative;
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            margin-left: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            width: calc(100% - 30px);
+        }
+        
+        .medication-card.pending {
+            background-color: var(--light-yellow);
+            border-left: 3px solid var(--yellow);
+        }
+        
+        .medication-card.taken {
+            background-color: var(--light-green);
+            border-left: 3px solid var(--green);
+        }
+        
+        .medication-card.missed {
+            background-color: var(--light-red);
+            border-left: 3px solid var(--red);
+        }
+        
+        .timeline-icon {
+            position: absolute;
+            left: -30px;
+            top: 15px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--gray);
+            z-index: 1;
+        }
+        
+        .timeline-icon.pending {
+            border-color: var(--yellow);
+            color: var(--yellow);
+            background-color: var(--white);
+        }
+        
+        .timeline-icon.taken {
+            border-color: var(--green);
+            color: var(--green);
+            background-color: var(--green);
+        }
+        
+        .timeline-icon.missed {
+            border-color: var(--red);
+            color: var(--red);
+            background-color: var(--white);
+        }
+        
+        .medication-time {
+            font-weight: 500;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+        
+        .medication-name {
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .medication-dosage {
+            color: var(--text-medium);
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+        
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+        
+        .status-badge.taken {
+            background-color: var(--green);
+            color: white;
+        }
+        
+        .status-badge.pending {
+            background-color: var(--yellow);
+            color: var(--text-dark);
+        }
+        
+        .status-badge.missed {
+            background-color: var(--red);
+            color: white;
+        }
+        
+        .take-med-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .take-med-btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .status-text {
+            font-size: 13px;
+            text-align: right;
+            color: var(--text-light);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px 0;
+            color: var(--text-medium);
+        }
+        
+        .error-message {
+            background-color: var(--light-red);
+            padding: 15px;
+            border-radius: 8px;
+            color: var(--red);
+            margin-bottom: 20px;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--text-light);
+            font-style: italic;
+        }
+        
+        /* สำหรับอุปกรณ์มือถือ */
+        @media (max-width: 480px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tab {
+                font-size: 12px;
+                padding: 12px 0;
+            }
+            
+            .medication-time {
+                font-size: 14px;
+            }
+            
+            .medication-dosage {
+                font-size: 12px;
+            }
+            
+            .status-badge {
+                padding: 2px 8px;
+                font-size: 11px;
+            }
+        }
+        
+        /* สำหรับหน้าจอขนาดกลาง (แท็บเล็ต) */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .container {
+                width: 100%;
+            }
+            
+            .medication-card {
+                padding: 12px;
+            }
+        }
+        
+        /* สำหรับหน้าจอขนาดใหญ่ (คอมพิวเตอร์) */
+        @media (min-width: 769px) {
+            .container {
+                width: 100%;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-section">
+                <div class="logo">
+                    <span class="logo-icon">M</span>
+                </div>
+                <span class="app-name">MediCare Reminder</span>
+            </div>
+            <div class="user-info">
+                <span class="username" id="username">กำลังโหลด...</span>
+                <button class="logout-btn" id="logout-btn">ออก</button>
+            </div>
+        </header>
+        
+        <div class="nav-tabs">
+            <div class="nav-tab active">หน้าหลัก</div>
+            <div class="nav-tab">รายการยา</div>
+            <div class="nav-tab">ตั้งค่าการแจ้งเตือน</div>
+            <div class="nav-tab">ประวัติการใช้ยา</div>
+        </div>
+        
+        <main>
+            <h1 class="page-title">หน้าหลัก</h1>
+            <p class="welcome-text">ยินดีต้อนรับ, <span id="welcome-name">กำลังโหลด...</span></p>
+            
+            <div id="error-container"></div>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-meds-today">-</div>
+                    <div class="stat-label">ยาวันนี้</div>
+                    <div class="stat-sublabel">รายการ</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value" id="taken-meds-today">-</div>
+                    <div class="stat-label">ยาที่ทานแล้ว</div>
+                    <div class="stat-sublabel">รายการ</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value" id="pending-meds-today">-</div>
+                    <div class="stat-label">รายการรอทาน</div>
+                    <div class="stat-sublabel">รายการ</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value" id="adherence-rate">-</div>
+                    <div class="stat-label">ความสม่ำเสมอในการทานยา</div>
+                    <div class="stat-sublabel">ในเดือนนี้</div>
+                </div>
+            </div>
+            
+            <h2 class="section-title">ยาที่ต้องทานวันนี้</h2>
+            <p class="section-date" id="today-date">กำลังโหลด...</p>
+            
+            <div id="medications-loading" class="loading">กำลังโหลดข้อมูลยา...</div>
+            
+            <div class="medication-timeline" id="medication-timeline">
+                <div class="timeline-line"></div>
+                <!-- ข้อมูลยาจะถูกใส่ที่นี่ด้วย JavaScript -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // API Base URL
+        const API_BASE_URL = 'http://localhost:3000';
+        
+        // ฟังก์ชันเริ่มต้นการทำงาน
+        document.addEventListener('DOMContentLoaded', function() {
+            // ตั้งค่าการใช้งาน tab
+            setupTabs();
+            
+            // ตั้งค่าปุ่มออกจากระบบ
+            document.getElementById('logout-btn').addEventListener('click', logout);
+            
+            // ตรวจสอบการล็อกอิน
+            checkAuth();
+        });
+        
+        // ตรวจสอบการล็อกอินและดึงข้อมูลผู้ใช้
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                // ถ้าไม่มี token ให้ไปยังหน้าเข้าสู่ระบบ
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // ดึงข้อมูลผู้ใช้
+            fetchUserData(token);
+        }
+        
+        // ดึงข้อมูลผู้ใช้
+        function fetchUserData(token) {
+            fetch(`${API_BASE_URL}/api/users/me`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('ไม่สามารถดึงข้อมูลผู้ใช้ได้');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // บันทึกข้อมูลผู้ใช้
+                const userData = data;
+                const patientId = data.patientId;
+                
+                // แสดงชื่อผู้ใช้
+                document.getElementById('username').textContent = `${data.firstName} ${data.lastName}`;
+                document.getElementById('welcome-name').textContent = `${data.firstName} ${data.lastName}`;
+                
+                // ดึงข้อมูลยาวันนี้
+                fetchTodayMedications(token, patientId);
+            })
+            .catch(error => {
+                console.error('Error fetching user data:', error);
+                showError('ไม่สามารถดึงข้อมูลผู้ใช้ได้ กรุณาลองใหม่อีกครั้ง');
+                
+                // หากเกิดข้อผิดพลาด อาจจะต้องล็อกเอาท์
+                if (error.message.includes('401') || error.message.includes('403')) {
+                    localStorage.removeItem('token');
+                    window.location.href = 'login.html';
+                }
+            });
+        }
+        
+        // ดึงข้อมูลยาวันนี้
+        function fetchTodayMedications(token) {
+            fetch(`${API_BASE_URL}/api/reminders/today`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('ไม่สามารถดึงข้อมูลยาวันนี้ได้');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // ซ่อนข้อความกำลังโหลด
+                document.getElementById('medications-loading').style.display = 'none';
+                
+                // แสดงข้อมูลสถิติ
+                updateStatistics(data);
+                
+                // แสดงวันที่ปัจจุบัน
+                const today = new Date();
+                document.getElementById('today-date').textContent = formatThaiDate(today);
+                
+                // แสดงรายการยา
+                renderMedicationTimeline(data);
+            })
+            .catch(error => {
+                console.error('Error fetching today medications:', error);
+                document.getElementById('medications-loading').style.display = 'none';
+                showError('ไม่สามารถดึงข้อมูลยาวันนี้ได้ กรุณาลองใหม่อีกครั้ง');
+            });
+        }
+        
+        // อัปเดตข้อมูลสถิติ
+        function updateStatistics(data) {
+            const pendingCount = data.pending ? data.pending.length : 0;
+            const takenCount = data.taken ? data.taken.length : 0;
+            const missedCount = data.missed ? data.missed.length : 0;
+            const totalCount = pendingCount + takenCount + missedCount;
+            
+            document.getElementById('total-meds-today').textContent = totalCount;
+            document.getElementById('taken-meds-today').textContent = takenCount;
+            document.getElementById('pending-meds-today').textContent = pendingCount;
+            document.getElementById('adherence-rate').textContent = data.adherenceRate ? `${data.adherenceRate}%` : 'N/A';
+        }
+        
+        // แสดงไทม์ไลน์ยาวันนี้
+        function renderMedicationTimeline(data) {
+            const timelineContainer = document.getElementById('medication-timeline');
+            
+            // เคลียร์ข้อมูลเดิม (แต่ยกเว้น timeline-line)
+            const timelineLine = timelineContainer.querySelector('.timeline-line');
+            timelineContainer.innerHTML = '';
+            timelineContainer.appendChild(timelineLine);
+            
+            // รวมรายการยาทั้งหมด
+            const allMeds = [];
+            
+            // เพิ่มยาที่ทานแล้ว
+            if (data.taken && data.taken.length > 0) {
+                data.taken.forEach(med => allMeds.push({...med, status: 'TAKEN'}));
+            }
+            
+            // เพิ่มยาที่ถึงเวลาทาน
+            if (data.pending && data.pending.length > 0) {
+                data.pending.forEach(med => allMeds.push({...med, status: 'PENDING'}));
+            }
+            
+            // เพิ่มยาที่พลาดการทาน
+            if (data.missed && data.missed.length > 0) {
+                data.missed.forEach(med => allMeds.push({...med, status: 'MISSED'}));
+            }
+            
+            // เรียงลำดับตามเวลา
+            allMeds.sort((a, b) => {
+                const timeA = a.reminderTime.split(':').map(Number);
+                const timeB = b.reminderTime.split(':').map(Number);
+                
+                if (timeA[0] !== timeB[0]) {
+                    return timeA[0] - timeB[0];
+                }
+                return timeA[1] - timeB[1];
+            });
+            
+            if (allMeds.length === 0) {
+                const emptyMessage = document.createElement('p');
+                emptyMessage.className = 'no-data';
+                emptyMessage.textContent = 'ไม่มียาที่ต้องทานวันนี้';
+                timelineContainer.appendChild(emptyMessage);
+                return;
+            }
+            
+            allMeds.forEach(med => {
+                const medCard = document.createElement('div');
+                medCard.className = `medication-card ${med.status.toLowerCase()}`;
+                
+                // กำหนดช่วงเวลาของยา
+                let timeOfDay = '';
+                const hour = parseInt(med.reminderTime.split(':')[0]);
+                if (hour >= 5 && hour < 11) {
+                    timeOfDay = 'เช้า';
+                } else if (hour >= 11 && hour < 16) {
+                    timeOfDay = 'กลางวัน';
+                } else if (hour >= 16 && hour < 20) {
+                    timeOfDay = 'เย็น';
+                } else {
+                    timeOfDay = 'กลางคืน';
+                }
+                
+                // สร้างไอคอนตามสถานะ
+                let iconSvg = '';
+                if (med.status === 'TAKEN') {
+                    iconSvg = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    `;
+                } else if (med.status === 'MISSED') {
+                    iconSvg = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    `;
+                } else {
+                    iconSvg = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    `;
+                }
+                
+                // กำหนดสถานะและปุ่มทานยา
+                let statusBadge = '';
+                let statusText = '';
+                let actionButton = '';
+                
+                if (med.status === 'TAKEN') {
+                    statusBadge = '<div class="status-badge taken">ทานแล้ว</div>';
+                    if (med.takenAt) {
+                        const takenAt = new Date(med.takenAt);
+                        statusText = `<div class="status-text">ทานแล้ว (${formatTime(takenAt)})</div>`;
+                    } else {
+                        statusText = `<div class="status-text">ทานแล้ว</div>`;
+                    }
+                } else if (med.status === 'PENDING') {
+                    statusBadge = '<div class="status-badge pending">ถึงเวลาทาน</div>';
+                    actionButton = `<button class="take-med-btn" onclick="takeMedication('${med.id}', '${med.reminderId}')">ทานยา</button>`;
+                } else if (med.status === 'MISSED') {
+                    statusBadge = '<div class="status-badge missed">พลาดการทาน</div>';
+                    statusText = '<div class="status-text">พลาดการทาน</div>';
+                } else {
+                    statusText = '<div class="status-text">ยังไม่ถึงเวลา</div>';
+                }
+                
+                // แสดงข้อมูลยา
+                const medType = getMedicationType(med.name);
+                
+                medCard.innerHTML = `
+                    <div class="timeline-icon ${med.status.toLowerCase()}">
+                        ${iconSvg}
+                    </div>
+                    <div class="medication-time">${med.reminderTime} น. - ${med.name} ${med.strength} ${medType}</div>
+                    <div class="medication-dosage">${timeOfDay} • รับประทานครั้งละ ${med.dosage} ${med.instructions ? med.instructions : ''}</div>
+                    ${statusBadge}
+                    ${actionButton}
+                    ${statusText}
+                `;
+                
+                timelineContainer.appendChild(medCard);
+            });
+        }
+        
+        // ระบุประเภทของยาจากชื่อ
+        function getMedicationType(name) {
+            const nameLower = name.toLowerCase();
+            if (nameLower.includes('enalapril') || nameLower.includes('ความดัน')) {
+                return '(ความดันโลหิต)';
+            } else if (nameLower.includes('metformin') || nameLower.includes('เบาหวาน')) {
+                return '(เบาหวาน)';
+            } else if (nameLower.includes('simvastatin') || nameLower.includes('ไขมัน')) {
+                return '(ไขมันในเลือด)';
+            } else if (nameLower.includes('paracetamol') || nameLower.includes('พาราเซตามอล')) {
+                return '(บรรเทาอาการปวด)';
+            } else if (nameLower.includes('amoxicillin') || nameLower.includes('ยาปฏิชีวนะ')) {
+                return '(ยาปฏิชีวนะ)';
+            }
+            return '';
+        }
+        
+        // บันทึกการทานยา
+        function takeMedication(medicationId, reminderId) {
+            const token = localStorage.getItem('token');
+            
+            fetch(`${API_BASE_URL}/api/medication-logs`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    medicationId,
+                    reminderId,
+                    status: 'TAKEN',
+                    notes: 'บันทึกผ่านแอปพลิเคชัน'
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('ไม่สามารถบันทึกการทานยาได้');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('บันทึกการทานยาเรียบร้อยแล้ว');
+                // รีโหลดข้อมูลยาวันนี้
+                fetchTodayMedications(token);
+            })
+            .catch(error => {
+                console.error('Error taking medication:', error);
+                alert('เกิดข้อผิดพลาดในการบันทึกการทานยา');
+            });
+        }
+        
+        // แสดงข้อความผิดพลาด
+        function showError(message) {
+            const errorContainer = document.getElementById('error-container');
+            errorContainer.innerHTML = `
+                <div class="error-message">
+                    <strong>ผิดพลาด:</strong> ${message}
+                </div>
+            `;
+        }
+        
+        // ตั้งค่าการกดแท็บ
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.nav-tab');
+            
+            tabs.forEach((tab, index) => {
+            tab.addEventListener('click', () => {
+                // นำทางไปยังหน้าที่เหมาะสม
+                switch(index) {
+                    case 0: // หน้าหลัก (ไม่ต้องทำอะไร เพราะเป็นหน้าปัจจุบัน)
+                        break;
+                    case 1: // รายการยา
+                        window.location.href = 'medication-list.html';
+                        break;
+                    case 2: // ตั้งค่าการแจ้งเตือน
+                        window.location.href = 'notification-settings.html';
+                        break;
+                    case 3: // ประวัติการใช้ยา
+                        window.location.href = 'medication-history.html';
+                        break;
+                }
+            });
+        });
+        
+        // ล็อกเอาท์
+        function logout() {
+            if (confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
+                // ลบ token จาก localStorage
+                localStorage.removeItem('token');
+                
+                // นำทางไปยังหน้าเข้าสู่ระบบ
+                window.location.href = 'login.html';
+            }
+        }
+        
+        // จัดรูปแบบวันที่เป็นภาษาไทย
+        function formatThaiDate(date) {
+            const dayNames = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
+            const monthNames = [
+                'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+                'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+            ];
+            
+            const day = date.getDate();
+            const month = date.getMonth();
+            const year = date.getFullYear() + 543; // แปลงเป็น พ.ศ.
+            const dayOfWeek = date.getDay();
+            
+            return `วัน${dayNames[dayOfWeek]}ที่ ${day} ${monthNames[month]} ${year}`;
+        }
+        
+        // จัดรูปแบบเวลา
+        function formatTime(date) {
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            
+            return `${hours}:${minutes} น.`;
+        }
+        
+        // แปลงสถานะเป็นภาษาไทย
+        function translateStatus(status) {
+            switch (status) {
+                case 'TAKEN':
+                    return 'ทานแล้ว';
+                case 'PENDING':
+                    return 'รอทาน';
+                case 'MISSED':
+                    return 'พลาดการทาน';
+                default:
+                    return status;
+            }
+        }
+        
+        // ใช้ตรวจสอบว่าอุปกรณ์เป็นมือถือหรือไม่
+        function isMobileDevice() {
+            return (window.innerWidth <= 480);
+        }
+        
+        // ปรับแต่ง UI ตามขนาดหน้าจอ
+        function adjustUIForScreenSize() {
+            const isMobile = isMobileDevice();
+            
+            // ปรับขนาดฟอนต์และระยะห่าง
+            if (isMobile) {
+                document.body.classList.add('mobile-view');
+            } else {
+                document.body.classList.remove('mobile-view');
+            }
+        }
+        
+        // เรียกใช้ฟังก์ชันปรับแต่ง UI เมื่อโหลดหน้าและเมื่อเปลี่ยนขนาดหน้าจอ
+        window.addEventListener('load', adjustUIForScreenSize);
+        window.addEventListener('resize', adjustUIForScreenSize);
+        
+        // เริ่มดึงข้อมูล (ทำเพื่อให้สามารถเรียกใช้ทดสอบแยกได้)
+        function initDashboard() {
+            checkAuth();
+        }
+        
+        // เรียกใช้ฟังก์ชันเริ่มต้น
+        initDashboard();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediCare Reminder - รายการยา</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #00897b;
+      --primary-dark: #005b4f;
+      --primary-light: #4ebaaa;
+      --secondary-color: #e0f2f1;
+      --background-color: #f5f5f5;
+      --text-color: #333333;
+      --error-color: #f44336;
+      --success-color: #4caf50;
+      --warning-color: #ff9800;
+      --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Kanit', sans-serif;
+    }
+
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 15px 0;
+      box-shadow: var(--shadow);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-decoration: none;
+      color: white;
+    }
+
+    .logo-icon {
+      background-color: white;
+      color: var(--primary-color);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: white;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .nav-container {
+      background-color: white;
+      box-shadow: var(--shadow);
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      overflow-x: auto;
+    }
+
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      padding: 15px 20px;
+      position: relative;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    nav a.active {
+      color: var(--primary-color);
+    }
+
+    nav a.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: var(--primary-color);
+    }
+
+    main {
+      flex-grow: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      width: 100%;
+    }
+
+    h1 {
+      color: var(--primary-color);
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .filter-container {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .filter-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .filter-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .filter-group input,
+    .filter-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    .filter-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      text-align: center;
+      text-decoration: none;
+      min-width: 120px;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary-color);
+      color: var(--primary-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: #c7e8e6;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      gap: 5px;
+    }
+
+    .pagination button {
+      width: 40px;
+      height: 40px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      background-color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pagination button.active {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 15px 20px;
+      background-color: var(--secondary-color);
+      color: var(--primary-dark);
+      font-weight: 500;
+      font-size: 1.1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .medications-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .medications-table th,
+    .medications-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #f2f2f2;
+    }
+
+    .medications-table th {
+      background-color: var(--secondary-color);
+      color: var(--primary-dark);
+      font-weight: 500;
+    }
+
+    .medications-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .medications-table tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+
+    .badge-active {
+      background-color: #e8f5e9;
+      color: var(--success-color);
+    }
+
+    .badge-completed {
+      background-color: #efebe9;
+      color: #795548;
+    }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+    }
+
+    .loading:after {
+      content: " ";
+      display: block;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 6px solid var(--primary-color);
+      border-color: var(--primary-color) transparent var(--primary-color) transparent;
+      animation: loading 1.2s linear infinite;
+    }
+
+    @keyframes loading {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .error-message {
+      background-color: #ffebee;
+      color: var(--error-color);
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 50px 20px;
+      color: #888;
+    }
+
+    .search-container {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 20px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+      padding-left: 40px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #666;
+    }
+
+    .tab.active {
+      color: var(--primary-color);
+      border-bottom: 2px solid var(--primary-color);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .filter-row {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .filter-actions {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <a href="dashboard.html" class="logo">
+        <div class="logo-icon">M</div>
+        <span>MediCare Reminder</span>
+      </a>
+      <div class="user-menu">
+        <div class="user-profile">
+          <span id="user-name"></span>
+          <div class="user-avatar" id="user-initial">น</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-container">
+    <nav>
+      <a href="dashboard.html">หน้าหลัก</a>
+      <a href="patients.html">รายชื่อผู้ป่วย</a>
+      <a href="medications.html" class="active">สั่งยา</a>
+      <a href="history.html">ประวัติการรักษา</a>
+      <a href="reports.html">รายงาน</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>รายการยา</h1>
+    
+    <div class="tabs">
+      <button class="tab active" data-tab="current-medications">รายการยาทั้งหมด</button>
+      <button class="tab" data-tab="prescribe-medications">สั่งยาให้ผู้ป่วย</button>
+    </div>
+    
+    <div id="current-medications" class="tab-content active">
+      <div class="search-container">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="search-medications" placeholder="ค้นหายา...">
+      </div>
+      
+      <div class="filter-container">
+        <div class="filter-row">
+          <div class="filter-group">
+            <label for="filter-category">หมวดหมู่</label>
+            <select id="filter-category">
+              <option value="">ทั้งหมด</option>
+              <option value="antibiotic">ยาปฏิชีวนะ</option>
+              <option value="antihistamine">ยาแก้แพ้</option>
+              <option value="antihypertensive">ยาลดความดัน</option>
+              <option value="antidiabetic">ยาเบาหวาน</option>
+              <option value="analgesic">ยาแก้ปวด</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label for="filter-form">รูปแบบยา</label>
+            <select id="filter-form">
+              <option value="">ทั้งหมด</option>
+              <option value="TABLET">เม็ด</option>
+              <option value="CAPSULE">แคปซูล</option>
+              <option value="SYRUP">น้ำ</option>
+              <option value="INJECTION">ฉีด</option>
+              <option value="CREAM">ครีม</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label for="filter-status">สถานะ</label>
+            <select id="filter-status">
+              <option value="">ทั้งหมด</option>
+              <option value="active">พร้อมใช้งาน</option>
+              <option value="low-stock">เหลือน้อย</option>
+              <option value="out-of-stock">หมด</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="filter-actions">
+          <button class="btn btn-secondary" id="btn-reset-filter">รีเซ็ต</button>
+          <button class="btn btn-primary" id="btn-apply-filter">ค้นหา</button>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <span>รายการยาทั้งหมด</span>
+          <span id="medication-count"></span>
+        </div>
+        <div class="card-body">
+          <div id="medications-table-container">
+            <div class="loading"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="pagination" id="pagination-container"></div>
+    </div>
+    
+    <div id="prescribe-medications" class="tab-content">
+      <div class="search-container">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="search-patients" placeholder="ค้นหาผู้ป่วย...">
+      </div>
+      
+      <div class="card">
+        <div class="card-header">
+          <span>รายชื่อผู้ป่วย</span>
+        </div>
+        <div class="card-body">
+          <div id="patients-table-container">
+            <div class="loading"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // ตัวแปรสำหรับเก็บข้อมูล token และ API URL
+    const API_URL = 'http://127.0.0.1:3000/api';
+    let token = localStorage.getItem('token');
+    let currentUser = null;
+    let currentPage = 1;
+    let totalPages = 1;
+    let medicationsData = [];
+    let patientsData = [];
+    
+    // ฟังก์ชันสำหรับตรวจสอบว่ามีการล็อกอินหรือไม่
+    function checkAuth() {
+      if (!token) {
+        window.location.href = 'index.html';
+        return false;
+      }
+      return true;
+    }
+    
+    // ฟังก์ชันสำหรับเรียกใช้ API
+    async function callAPI(endpoint, method = 'GET', data = null) {
+      try {
+        const options = {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        };
+
+        if (data && (method === 'POST' || method === 'PUT')) {
+          options.body = JSON.stringify(data);
+        }
+
+        const response = await fetch(`${API_URL}${endpoint}`, options);
+        
+        if (response.status === 401) {
+          // Token หมดอายุหรือไม่ถูกต้อง
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          window.location.href = 'index.html';
+          return null;
+        }
+
+        return await response.json();
+      } catch (error) {
+        console.error('API Error:', error);
+        return { error: 'เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์' };
+      }
+    }
+    
+    // ฟังก์ชันสำหรับดึงข้อมูลผู้ใช้ปัจจุบัน
+    async function getCurrentUser() {
+      if (currentUser) return currentUser;
+      
+      const userData = await callAPI('/users/me');
+      if (!userData.error) {
+        currentUser = userData;
+        localStorage.setItem('user', JSON.stringify(userData));
+        return userData;
+      }
+      return null;
+    }
+    
+    // ฟังก์ชันสำหรับดึงข้อมูลยาทั้งหมด
+    async function getMedications() {
+      const container = document.getElementById('medications-table-container');
+      const category = document.getElementById('filter-category').value;
+      const form = document.getElementById('filter-form').value;
+      const status = document.getElementById('filter-status').value;
+      const search = document.getElementById('search-medications').value;
+      
+      try {
+        let endpoint = `/medications?page=${currentPage}`;
+        if (category) endpoint += `&category=${category}`;
+        if (form) endpoint += `&form=${form}`;
+        if (status) endpoint += `&status=${status}`;
+        if (search) endpoint += `&search=${encodeURIComponent(search)}`;
+        
+        const data = await callAPI(endpoint);
+        
+        if (data.error) {
+          container.innerHTML = `<div class="error-message">${data.error}</div>`;
+          return;
+        }
+        
+        medicationsData = data.medications || [];
+        totalPages = data.totalPages || 1;
+        
+        // แสดงจำนวนรายการ
+        document.getElementById('medication-count').textContent = `${data.totalItems || 0} รายการ`;
+        
+        // แสดงข้อมูลในตาราง
+        displayMedicationsTable(medicationsData);
+        
+        // สร้างปุ่มเพจเนชัน
+        createPagination(totalPages);
+        
+      } catch (error) {
+        console.error('Error fetching medications:', error);
+        container.innerHTML = `<div class="error-message">ไม่สามารถโหลดข้อมูลยาได้ กรุณาลองใหม่อีกครั้ง</div>`;
+      }
+    }
+    
+    // ฟังก์ชันสำหรับแสดงตารางยา
+    function displayMedicationsTable(medications) {
+      const container = document.getElementById('medications-table-container');
+      
+      if (!medications || medications.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <p>ไม่พบรายการยา</p>
+          </div>
+        `;
+        return;
+      }
+      
+      // สร้าง HTML สำหรับตาราง
+      let tableHTML = `
+        <table class="medications-table">
+          <thead>
+            <tr>
+              <th>ชื่อยา</th>
+              <th>ความแรง</th>
+              <th>รูปแบบยา</th>
+              <th>หมวดหมู่</th>
+              <th>จำนวนคงเหลือ</th>
+              <th>สถานะ</th>
+              <th>การจัดการ</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+      
+      // เพิ่มแถวข้อมูลยา
+      medications.forEach(med => {
+        // คำนวณสถานะและ badge
+        let statusText = 'พร้อมใช้งาน';
+        let statusClass = 'badge-active';
+        
+        if (med.stock === 0) {
+          statusText = 'หมด';
+          statusClass = 'badge-completed';
+        } else if (med.stock < med.minStock) {
+          statusText = 'เหลือน้อย';
+          statusClass = 'badge-completed';
+        }
+        
+        tableHTML += `
+          <tr>
+            <td>${med.name}</td>
+            <td>${med.strength || '-'}</td>
+            <td>${getFormText(med.form)}</td>
+            <td>${med.category || '-'}</td>
+            <td>${med.stock || 0} ${getUnitText(med.form)}</td>
+            <td><span class="badge ${statusClass}">${statusText}</span></td>
+            <td>
+              <button class="btn btn-secondary" onclick="viewMedicationDetails('${med.id}')">ดูรายละเอียด</button>
+            </td>
+          </tr>
+        `;
+      });
+      
+      tableHTML += `
+          </tbody>
+        </table>
+      `;
+      
+      container.innerHTML = tableHTML;
+    }
+    
+    // ฟังก์ชันสำหรับดึงข้อมูลผู้ป่วยทั้งหมด
+    async function getPatients() {
+      const container = document.getElementById('patients-table-container');
+      const search = document.getElementById('search-patients').value;
+      
+      try {
+        let endpoint = `/patients?page=1`;
+        if (search) endpoint += `&search=${encodeURIComponent(search)}`;
+        
+        const data = await callAPI(endpoint);
+        
+        if (data.error) {
+          container.innerHTML = `<div class="error-message">${data.error}</div>`;
+          return;
+        }
+        
+        patientsData = data.patients || [];
+        
+        // แสดงข้อมูลในตาราง
+        displayPatientsTable(patientsData);
+        
+      } catch (error) {
+        console.error('Error fetching patients:', error);
+        container.innerHTML = `<div class="error-message">ไม่สามารถโหลดข้อมูลผู้ป่วยได้ กรุณาลองใหม่อีกครั้ง</div>`;
+      }
+    }
+    
+    // ฟังก์ชันสำหรับแสดงตารางผู้ป่วย
+    function displayPatientsTable(patients) {
+      const container = document.getElementById('patients-table-container');
+      
+      if (!patients || patients.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <p>ไม่พบรายชื่อผู้ป่วย</p>
+          </div>
+        `;
+        return;
+      }
+      
+      // สร้าง HTML สำหรับตาราง
+      let tableHTML = `
+        <table class="medications-table">
+          <thead>
+            <tr>
+              <th>ชื่อ-นามสกุล</th>
+              <th>HN</th>
+              <th>อายุ</th>
+              <th>เพศ</th>
+              <th>โรคประจำตัว</th>
+              <th>การจัดการ</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+      
+      // เพิ่มแถวข้อมูลผู้ป่วย
+      patients.forEach(patient => {
+        tableHTML += `
+          <tr>
+            <td>${patient.fullName}</td>
+            <td>${patient.hn}</td>
+            <td>${patient.age} ปี</td>
+            <td>${patient.gender === 'MALE' ? 'ชาย' : 'หญิง'}</td>
+            <td>${patient.medicalCondition || '-'}</td>
+            <td>
+              <button class="btn btn-primary" onclick="prescribeMedication('${patient.id}')">สั่งยา</button>
+            </td>
+          </tr>
+        `;
+      });
+      
+      tableHTML += `
+          </tbody>
+        </table>
+      `;
+      
+      container.innerHTML = tableHTML;
+    }
+    
+    // ฟังก์ชันสำหรับสร้างปุ่มเพจเนชัน
+    function createPagination(totalPages) {
+      const container = document.getElementById('pagination-container');
+      container.innerHTML = '';
+      
+      if (totalPages <= 1) return;
+      
+      // สร้างปุ่มไปหน้าแรก
+      if (currentPage > 1) {
+        const firstPageBtn = document.createElement('button');
+        firstPageBtn.textContent = '«';
+        firstPageBtn.onclick = () => changePage(1);
+        container.appendChild(firstPageBtn);
+      }
+      
+      // สร้างปุ่มไปหน้าก่อนหน้า
+      if (currentPage > 1) {
+        const prevPageBtn = document.createElement('button');
+        prevPageBtn.textContent = '‹';
+        prevPageBtn.onclick = () => changePage(currentPage - 1);
+        container.appendChild(prevPageBtn);
+      }
+      
+      // กำหนดช่วงหน้าที่จะแสดง
+      let startPage = Math.max(1, currentPage - 2);
+      let endPage = Math.min(totalPages, currentPage + 2);
+      
+      // ปรับช่วงหน้าเพื่อให้แสดงจำนวน 5 หน้าเสมอ (ถ้ามี)
+      if (endPage - startPage < 4 && totalPages > 5) {
+        if (currentPage < 3) {
+          endPage = Math.min(totalPages, 5);
+        } else if (currentPage > totalPages - 2) {
+          startPage = Math.max(1, totalPages - 4);
+        }
+      }
+      
+      // สร้างปุ่มเลขหน้า
+      for (let i = startPage; i <= endPage; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.textContent = i;
+        pageBtn.onclick = () => changePage(i);
+        
+        if (i === currentPage) {
+          pageBtn.classList.add('active');
+        }
+        
+        container.appendChild(pageBtn);
+      }
+      
+      // สร้างปุ่มไปหน้าถัดไป
+      if (currentPage < totalPages) {
+        const nextPageBtn = document.createElement('button');
+        nextPageBtn.textContent = '›';
+        nextPageBtn.onclick = () => changePage(currentPage + 1);
+        container.appendChild(nextPageBtn);
+      }
+      
+      // สร้างปุ่มไปหน้าสุดท้าย
+      if (currentPage < totalPages) {
+        const lastPageBtn = document.createElement('button');
+        lastPageBtn.textContent = '»';
+        lastPageBtn.onclick = () => changePage(totalPages);
+        container.appendChild(lastPageBtn);
+      }
+    }
+    
+    // ฟังก์ชันสำหรับเปลี่ยนหน้า
+    function changePage(page) {
+      currentPage = page;
+      getMedications();
+    }
+    
+    // ฟังก์ชันสำหรับดูรายละเอียดยา
+    function viewMedicationDetails(medicationId) {
+      // ในที่นี้อาจจะเป็นการเปิด modal หรือนำทางไปยังหน้ารายละเอียดยา
+      alert(`ดูรายละเอียดยารหัส ${medicationId}`);
+    }
+    
+    // ฟังก์ชันสำหรับสั่งยาให้ผู้ป่วย
+    function prescribeMedication(patientId) {
+      window.location.href = `prescribe.html?patientId=${patientId}`;
+    }
+    
+    // ฟังก์ชันสำหรับแปลงรหัสรูปแบบยาเป็นข้อความ
+    function getFormText(form) {
+      switch (form) {
+        case 'TABLET': return 'เม็ด';
+        case 'CAPSULE': return 'แคปซูล';
+        case 'SYRUP': return 'น้ำ';
+        case 'INJECTION': return 'ฉีด';
+        case 'CREAM': return 'ครีม';
+        case 'DROPS': return 'หยด';
+        case 'INHALER': return 'พ่น';
+        default: return form || '-';
+      }
+    }
+    
+    // ฟังก์ชันสำหรับแปลงรหัสรูปแบบยาเป็นหน่วย
+    function getUnitText(form) {
+      switch (form) {
+        case 'TABLET': return 'เม็ด';
+        case 'CAPSULE': return 'แคปซูล';
+        case 'SYRUP': return 'ขวด';
+        case 'INJECTION': return 'แอมพูล';
+        case 'CREAM': return 'หลอด';
+        case 'DROPS': return 'ขวด';
+        case 'INHALER': return 'หลอด';
+        default: return 'หน่วย';
+      }
+    }
+    
+    // ฟังก์ชันสำหรับรีเซ็ตฟิลเตอร์
+    function resetFilters() {
+      document.getElementById('filter-category').value = '';
+      document.getElementById('filter-form').value = '';
+      document.getElementById('filter-status').value = '';
+      document.getElementById('search-medications').value = '';
+      
+      currentPage = 1;
+      getMedications();
+    }
+    
+    // เมื่อโหลดหน้าเสร็จ
+    document.addEventListener('DOMContentLoaded', async function() {
+      // ตรวจสอบการล็อกอิน
+      if (!checkAuth()) return;
+      
+      try {
+        // ดึงข้อมูลผู้ใช้ปัจจุบัน
+        const user = await getCurrentUser();
+        if (user) {
+          // แสดงชื่อผู้ใช้
+          document.getElementById('user-name').textContent = user.firstName ? `${user.title || ''} ${user.firstName} ${user.lastName}` : 'คุณหมอ';
+          
+          // ตั้งค่าตัวอักษรแรกในรูปโปรไฟล์
+          if (user.firstName) {
+            document.getElementById('user-initial').textContent = user.firstName.charAt(0);
+          }
+        }
+        
+        // ดึงข้อมูลยาทั้งหมด
+        await getMedications();
+        
+        // เพิ่ม event listener สำหรับแท็บ
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+          tab.addEventListener('click', function() {
+            const tabName = this.getAttribute('data-tab');
+            
+            // ซ่อนเนื้อหาแท็บทั้งหมด
+            document.querySelectorAll('.tab-content').forEach(content => {
+              content.classList.remove('active');
+            });
+            
+            // ยกเลิกการเลือกแท็บทั้งหมด
+            document.querySelectorAll('.tab').forEach(t => {
+              t.classList.remove('active');
+            });
+            
+            // แสดงเนื้อหาแท็บที่เลือก
+            document.getElementById(tabName).classList.add('active');
+            
+            // เลือกแท็บปัจจุบัน
+            this.classList.add('active');
+            
+            // โหลดข้อมูลตามแท็บที่เลือก
+            if (tabName === 'current-medications') {
+              getMedications();
+            } else if (tabName === 'prescribe-medications') {
+              getPatients();
+            }
+          });
+        });
+        
+        // เพิ่ม event listener สำหรับค้นหาและฟิลเตอร์
+        document.getElementById('btn-apply-filter').addEventListener('click', function() {
+          currentPage = 1;
+          getMedications();
+        });
+        
+        document.getElementById('btn-reset-filter').addEventListener('click', resetFilters);
+        
+        document.getElementById('search-medications').addEventListener('keyup', function(event) {
+          if (event.key === 'Enter') {
+            currentPage = 1;
+            getMedications();
+          }
+        });
+        
+        document.getElementById('search-patients').addEventListener('keyup', function(event) {
+          if (event.key === 'Enter') {
+            getPatients();
+          }
+        });
+        
+      } catch (error) {
+        console.error('Error initializing medications page:', error);
+      }
+    });
+  </script>
+</body>
+</html>

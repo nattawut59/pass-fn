@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediCare Reminder - ประวัติการรักษา</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #00897b;
+      --primary-dark: #005b4f;
+      --primary-light: #4ebaaa;
+      --secondary-color: #e0f2f1;
+      --background-color: #f5f5f5;
+      --text-color: #333333;
+      --error-color: #f44336;
+      --success-color: #4caf50;
+      --warning-color: #ff9800;
+      --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Kanit', sans-serif;
+    }
+
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 15px 0;
+      box-shadow: var(--shadow);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-decoration: none;
+      color: white;
+    }
+
+    .logo-icon {
+      background-color: white;
+      color: var(--primary-color);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: white;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .nav-container {
+      background-color: white;
+      box-shadow: var(--shadow);
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      overflow-x: auto;
+    }
+
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      padding: 15px 20px;
+      position: relative;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    nav a.active {
+      color: var(--primary-color);
+    }
+
+    nav a.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: var(--primary-color);
+    }
+
+    main {
+      flex-grow: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      width: 100%;
+    }
+
+    h1 {
+      color: var(--primary-color);
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .search-box {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .search-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .search-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .search-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .search-group input,
+    .search-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    .search-button {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
+    .patient-card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .patient-header {
+      margin-bottom: 20px;
+    }
+
+    .patient-name {
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+
+    .patient-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      color: #666;
+    }
+
+    .patient-condition {
+      margin-top: 10px;
+    }
+
+    .condition-tag {
+      display: inline-block;
+      background-color: #f0f0f0;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+
+    .condition-diabetes {
+      background-color: #e3f2fd;
+      color: #1976d2;
+    }
+
+    .condition-hypertension {
+      background-color: #fff8e1;
+      color: #ff8f00;
+    }
+
+    .condition-cardio {
+      background-color: #ffebee;
+      color: #d32f2f;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 8px 15px;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary-color);
+      color: var(--primary-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: #c7e8e6;
+    }
+
+    .tabs {
+      display: flex;
+      margin-top: 20px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #666;
+      position: relative;
+    }
+
+    .tab.active {
+      color: var(--primary-color);
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--primary-color);
+    }
+
+    .tab-content {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .medication-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .medication-table th,
+    .medication-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #f2f2f2;
+    }
+
+    .medication-table th {
+      font-weight: 500;
+      color: #666;
+      border-bottom: 2px solid #eee;
+    }
+
+    .medication-table tbody tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      background-color: #e8f5e9;
+      color: var(--success-color);
+    }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 300px;
+    }
+
+    .loading:after {
+      content: " ";
+      display: block;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 6px solid var(--primary-color);
+      border-color: var(--primary-color) transparent var(--primary-color) transparent;
+      animation: loading 1.2s linear infinite;
+    }
+
+    @keyframes loading {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .show-more {
+      display: block;
+      text-align: center;
+      padding: 10px;
+      margin-top: 10px;
+      background-color: #f5f5f5;
+      border-radius: 4px;
+      color: #666;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .show-more:hover {
+      background-color: #eeeeee;
+    }
+
+    @media (max-width: 768px) {
+      .search-form {
+        flex-direction: column;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <a href="dashboard.html" class="logo">
+        <div class="logo-icon">M</div>
+        <span>MediCare Reminder</span>
+      </a>
+      <div class="user-menu">
+        <div class="user-profile">
+          <span id="user-name">นพ.สมชาย รักษาดี</span>
+          <div class="user-avatar" id="user-initial">น</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-container">
+    <nav>
+      <a href="dashboard.html">หน้าหลัก</a>
+      <a href="patients.html">รายชื่อผู้ป่วย</a>
+      <a href="medications.html">สั่งยา</a>
+      <a href="history.html" class="active">ประวัติการรักษา</a>
+      <a href="reports.html">รายงาน</a>
+      <a href="settings.html">ตั้งค่า</a>
+    </nav>
+  </div>
+
+  <main>
+    <h1>ประวัติการรักษา</h1>
+    
+    <div class="search-box">
+      <h2>ค้นหาประวัติผู้ป่วย</h2>
+      <div class="search-form">
+        <div class="search-group">
+          <label for="patient-search">ค้นหาชื่อผู้ป่วยหรือรหัส HN...</label>
+          <input type="text" id="patient-search" placeholder="ค้นหาชื่อผู้ป่วยหรือรหัส HN...">
+        </div>
+        
+        <div class="search-group">
+          <label for="start-date">ตั้งแต่วันที่</label>
+          <input type="date" id="start-date">
+        </div>
+        
+        <div class="search-group">
+          <label for="end-date">ถึงวันที่</label>
+          <input type="date" id="end-date">
+        </div>
+      </div>
+      
+      <div class="search-button">
+        <button class="btn btn-primary" id="btn-search">ค้นหาประวัติ</button>
+      </div>
+    </div>
+    
+    <div id="patient-detail">
+      <div class="patient-card">
+        <div class="patient-header">
+          <h2 class="patient-name">นายสมชาย ใจดี</h2>
+          <div class="patient-info">
+            <span>HN: 65432100</span>
+            <span>อายุ: 68 ปี</span>
+            <span>เพศ: ชาย</span>
+          </div>
+          <div class="patient-condition">
+            <span class="condition-tag condition-hypertension">เบาหวาน</span>
+            <span class="condition-tag condition-diabetes">ความดันโลหิตสูง</span>
+            <span class="condition-tag condition-cardio">ไขมันในเลือดสูง</span>
+          </div>
+        </div>
+        
+        <div class="action-buttons">
+          <button class="btn btn-primary" id="btn-medical-history">ประวัติการรักษา</button>
+          <button class="btn btn-secondary" id="btn-medication-history">ประวัติการสั่งยา</button>
+          <button class="btn btn-secondary" id="btn-prescribe">สั่งยา</button>
+        </div>
+      </div>
+      
+      <div class="tabs">
+        <button class="tab active" data-tab="prescription-history">ประวัติการสั่งยา</button>
+        <button class="tab" data-tab="appointment-history">ประวัติการนัดหมาย</button>
+        <button class="tab" data-tab="lab-results">ผลตรวจทางห้องปฏิบัติการ</button>
+        <button class="tab" data-tab="medication-alert">ประวัติการแจ้งเตือนยา</button>
+      </div>
+      
+      <div id="prescription-history" class="tab-content active">
+        <table class="medication-table">
+          <thead>
+            <tr>
+              <th>วันที่สั่งยา</th>
+              <th>ชื่อยา</th>
+              <th>ขนาดและวิธีใช้</th>
+              <th>แพทย์ผู้สั่ง</th>
+              <th>สถานะ</th>
+            </tr>
+          </thead>
+          <tbody id="prescription-table-body">
+            <tr>
+              <td>01/03/2025</td>
+              <td>Enalapril</td>
+              <td>20 mg วันละ 1 ครั้ง หลังอาหารเช้า<br>จำนวน: 30 เม็ด (30 วัน)</td>
+              <td>นพ.สมชาย รักษาดี</td>
+              <td><span class="status-badge">จ่ายยาแล้ว</span></td>
+            </tr>
+            <tr>
+              <td>01/03/2025</td>
+              <td>Metformin</td>
+              <td>500 mg วันละ 2 ครั้ง หลังอาหารเช้า-เย็น<br>จำนวน: 60 เม็ด (30 วัน)</td>
+              <td>นพ.สมชาย รักษาดี</td>
+              <td><span class="status-badge">จ่ายยาแล้ว</span></td>
+            </tr>
+            <tr>
+              <td>01/03/2025</td>
+              <td>Simvastatin</td>
+              <td>20 mg วันละ 1 ครั้ง ก่อนนอน<br>จำนวน: 30 เม็ด (30 วัน)</td>
+              <td>นพ.สมชาย รักษาดี</td>
+              <td><span class="status-badge">จ่ายยาแล้ว</span></td>
+            </tr>
+            <tr>
+              <td>01/02/2025</td>
+              <td>Enalapril</td>
+              <td>20 mg วันละ 1 ครั้ง หลังอาหารเช้า<br>จำนวน: 30 เม็ด (30 วัน)</td>
+              <td>พญ.สมหญิง รักษาดี</td>
+              <td><span class="status-badge">จ่ายยาแล้ว</span></td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <a href="#" class="show-more" id="show-more-prescriptions">แสดงเพิ่มเติม</a>
+      </div>
+      
+      <div id="appointment-history" class="tab-content">
+        <!-- ข้อมูลประวัติการนัดหมาย -->
+      </div>
+      
+      <div id="lab-results" class="tab-content">
+        <!-- ข้อมูลผลตรวจทางห้องปฏิบัติการ -->
+      </div>
+      
+      <div id="medication-alert" class="tab-content">
+        <!-- ข้อมูลประวัติการแจ้งเตือนยา -->
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // ตัวแปรสำหรับเก็บข้อมูล token และ API URL
+    const API_URL = 'http://127.0.0.1:3000/api';
+    let token = localStorage.getItem('token');
+    let currentUser = null;
+    let currentPatient = null;
+    
+    // ฟังก์ชันสำหรับตรวจสอบว่ามีการล็อกอินหรือไม่
+    function checkAuth() {
+      if (!token) {
+        window.location.href = 'index.html';
+        return false;
+      }
+      return true;
+    }
+    
+    // ฟังก์ชันสำหรับเรียกใช้ API
+    async function callAPI(endpoint, method = 'GET', data = null) {
+      try {
+        const options = {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        };
+
+        if (data && (method === 'POST' || method === 'PUT')) {
+          options.body = JSON.stringify(data);
+        }
+
+        const response = await fetch(`${API_URL}${endpoint}`, options);
+        
+        if (response.status === 401) {
+          // Token หมดอายุหรือไม่ถูกต้อง
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          window.location.href = 'index.html';
+          return null;
+        }
+
+        return await response.json();
+      } catch (error) {
+        console.error('API Error:', error);
+        return { error: 'เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์' };
+      }
+    }
+    
+    // ฟังก์ชันสำหรับดึงข้อมูลผู้ใช้ปัจจุบัน
+    async function getCurrentUser() {
+      if (currentUser) return currentUser;
+      
+      const userData = await callAPI('/users/me');
+      if (!userData.error) {
+        currentUser = userData;
+        localStorage.setItem('user', JSON.stringify(userData));
+        return userData;
+      }
+      return null;
+    }
+
+    // ฟังก์ชันสำหรับดึงข้อมูลประวัติการรักษาของผู้ป่วย
+    async function getMedicalHistory(patientId) {
+      try {
+        const historyData = await callAPI(`/patients/${patientId}/medical-history`);
+        if (historyData.error) {
+          console.error('Error fetching medical history:', historyData.error);
+          return null;
+        }
+        return historyData;
+      } catch (error) {
+        console.error('Error fetching medical history:', error);
+        return null;
+      }
+    }
+    
+    // ฟังก์ชันสำหรับดึงข้อมูลประวัติการสั่งยาของผู้ป่วย
+    async function getMedicationHistory(patientId) {
+      try {
+        const medHistoryData = await callAPI(`/patients/${patientId}/medication-history`);
+        if (medHistoryData.error) {
+          console.error('Error fetching medication history:', medHistoryData.error);
+          return null;
+        }
+        return medHistoryData;
+      } catch (error) {
+        console.error('Error fetching medication history:', error);
+        return null;
+      }
+    }
+    
+    // ฟังก์ชันสำหรับค้นหาผู้ป่วย
+    async function searchPatient() {
+      const searchText = document.getElementById('patient-search').value.trim();
+      const startDate = document.getElementById('start-date').value;
+      const endDate = document.getElementById('end-date').value;
+      
+      if (!searchText) {
+        alert('กรุณากรอกชื่อผู้ป่วยหรือรหัส HN');
+        return;
+      }
+      
+      try {
+        let endpoint = `/patients/search?term=${encodeURIComponent(searchText)}`;
+        if (startDate) endpoint += `&startDate=${startDate}`;
+        if (endDate) endpoint += `&endDate=${endDate}`;
+        
+        const searchResult = await callAPI(endpoint);
+        if (searchResult.error) {
+          console.error('Error searching patient:', searchResult.error);
+          return;
+        }
+        
+        if (searchResult.patients && searchResult.patients.length > 0) {
+          currentPatient = searchResult.patients[0];
+          displayPatientDetails(currentPatient);
+          
+          // ดึงประวัติการสั่งยา
+          const medHistory = await getMedicationHistory(currentPatient.id);
+          if (medHistory && medHistory.medications) {
+            displayMedicationHistory(medHistory.medications);
+          }
+        } else {
+          alert('ไม่พบข้อมูลผู้ป่วย');
+        }
+      } catch (error) {
+        console.error('Error searching patient:', error);
+      }
+    }
+    
+    // ฟังก์ชันสำหรับแสดงข้อมูลผู้ป่วย
+    function displayPatientDetails(patient) {
+      // แสดงข้อมูลผู้ป่วยในการ์ด
+      document.getElementById('patient-detail').style.display = 'block';
+      
+      // อัปเดตชื่อและข้อมูลพื้นฐาน
+      document.querySelector('.patient-name').textContent = patient.fullName;
+      
+      // อัปเดตข้อมูลผู้ป่วย
+      const patientInfo = document.querySelector('.patient-info');
+      patientInfo.innerHTML = `
+        <span>HN: ${patient.hn}</span>
+        <span>อายุ: ${patient.age} ปี</span>
+        <span>เพศ: ${patient.gender === 'MALE' ? 'ชาย' : 'หญิง'}</span>
+      `;
+      
+      // อัปเดตโรคประจำตัว
+      const conditionContainer = document.querySelector('.patient-condition');
+      conditionContainer.innerHTML = '';
+      
+      if (patient.medicalCondition) {
+        const conditions = patient.medicalCondition.split(',');
+        conditions.forEach(condition => {
+          const trimmedCondition = condition.trim();
+          let className = 'condition-tag';
+          
+          if (trimmedCondition.toLowerCase().includes('เบาหวาน')) {
+            className += ' condition-diabetes';
+          } else if (trimmedCondition.toLowerCase().includes('ความดัน')) {
+            className += ' condition-hypertension';
+          } else if (trimmedCondition.toLowerCase().includes('ไขมัน')) {
+            className += ' condition-cardio';
+          }
+          
+          const conditionTag = document.createElement('span');
+          conditionTag.className = className;
+          conditionTag.textContent = trimmedCondition;
+          conditionContainer.appendChild(conditionTag);
+        });
+      }
+    }
+    
+    // ฟังก์ชันสำหรับแสดงประวัติการสั่งยา
+    function displayMedicationHistory(medications) {
+      const tableBody = document.getElementById('prescription-table-body');
+      tableBody.innerHTML = '';
+      
+      if (!medications || medications.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align: center; padding: 20px;">ไม่พบประวัติการสั่งยา</td>
+          </tr>
+        `;
+        return;
+      }
+      
+      medications.forEach(med => {
+        const row = document.createElement('tr');
+        
+        row.innerHTML = `
+          <td>${formatDate(med.startDate)}</td>
+          <td>${med.name}</td>
+          <td>${med.strength} ${med.dosage} ${med.frequency}<br>จำนวน: ${med.quantity} ${getUnitByForm(med.form)} (${getDurationDays(med)} วัน)</td>
+          <td>${med.doctorName || 'ไม่ระบุ'}</td>
+          <td><span class="status-badge">${med.status || 'จ่ายยาแล้ว'}</span></td>
+        `;
+        
+        tableBody.appendChild(row);
+      });
+    }
+    
+    // ฟังก์ชันสำหรับฟอร์แมตวันที่
+    function formatDate(dateString) {
+      if (!dateString) return '-';
+      
+      const date = new Date(dateString);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear() + 543; // แปลงเป็นปี พ.ศ.
+      
+      return `${day}/${month}/${year}`;
+    }
+    
+    // ฟังก์ชันสำหรับแปลงรูปแบบยาเป็นหน่วย
+    function getUnitByForm(form) {
+      switch (form) {
+        case 'TABLET': return 'เม็ด';
+        case 'CAPSULE': return 'แคปซูล';
+        case 'SYRUP': return 'ขวด';
+        case 'INJECTION': return 'แอมพูล';
+        case 'CREAM': return 'หลอด';
+        case 'INHALER': return 'หลอด';
+        default: return 'หน่วย';
+      }
+    }
+    
+    // ฟังก์ชันสำหรับคำนวณจำนวนวันตามการสั่งยา
+    function getDurationDays(medication) {
+      if (medication.startDate && medication.endDate) {
+        const start = new Date(medication.startDate);
+        const end = new Date(medication.endDate);
+        const diffTime = Math.abs(end - start);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays;
+      }
+      
+      // กรณีที่ไม่มีวันสิ้นสุด
+      if (medication.frequency && medication.quantity) {
+        // คำนวณจากความถี่และจำนวน
+        let dosesPerDay = 1;
+        
+        if (medication.frequency.includes('2 ครั้ง')) {
+          dosesPerDay = 2;
+        } else if (medication.frequency.includes('3 ครั้ง')) {
+          dosesPerDay = 3;
+        } else if (medication.frequency.includes('4 ครั้ง')) {
+          dosesPerDay = 4;
+        }
+        
+        return Math.floor(medication.quantity / dosesPerDay);
+      }
+      
+      return 30; // ค่าเริ่มต้น 30 วัน
+    }
+    
+    // ฟังก์ชันสำหรับสั่งยาให้ผู้ป่วย
+    function prescribeMedication() {
+      if (currentPatient && currentPatient.id) {
+        window.location.href = `prescribe.html?patientId=${currentPatient.id}`;
+      }
+    }
+    
+    // เมื่อโหลดหน้าเสร็จ
+    document.addEventListener('DOMContentLoaded', async function() {
+      // ตรวจสอบการล็อกอิน
+      if (!checkAuth()) return;
+      
+      try {
+        // ดึงข้อมูลผู้ใช้ปัจจุบัน
+        const user = await getCurrentUser();
+        if (user) {
+          // แสดงชื่อผู้ใช้
+          document.getElementById('user-name').textContent = user.firstName ? `${user.title || ''} ${user.firstName} ${user.lastName}` : 'คุณหมอ';
+          
+          // ตั้งค่าตัวอักษรแรกในรูปโปรไฟล์
+          if (user.firstName) {
+            document.getElementById('user-initial').textContent = user.firstName.charAt(0);
+          }
+        }
+        
+        // เพิ่ม event listener สำหรับค้นหาผู้ป่วย
+        document.getElementById('btn-search').addEventListener('click', searchPatient);
+        
+        // เพิ่ม event listener สำหรับเปลี่ยนแท็บ
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+          tab.addEventListener('click', function() {
+            const tabName = this.getAttribute('data-tab');
+            
+            // ซ่อนเนื้อหาแท็บทั้งหมด
+            document.querySelectorAll('.tab-content').forEach(content => {
+              content.classList.remove('active');
+            });
+            
+            // ยกเลิกการเลือกแท็บทั้งหมด
+            document.querySelectorAll('.tab').forEach(t => {
+              t.classList.remove('active');
+            });
+            
+            // แสดงเนื้อหาแท็บที่เลือก
+            document.getElementById(tabName).classList.add('active');
+            
+            // เลือกแท็บปัจจุบัน
+            this.classList.add('active');
+          });
+        });
+        
+        // เพิ่ม event listener สำหรับปุ่มการกระทำต่างๆ
+        document.getElementById('btn-prescribe').addEventListener('click', prescribeMedication);
+        
+        document.getElementById('btn-medical-history').addEventListener('click', function() {
+          // เลือกแท็บประวัติการนัดหมาย
+          document.querySelector('.tab[data-tab="appointment-history"]').click();
+        });
+        
+        document.getElementById('btn-medication-history').addEventListener('click', function() {
+          // เลือกแท็บประวัติการสั่งยา
+          document.querySelector('.tab[data-tab="prescription-history"]').click();
+        });
+        
+        // ตรวจสอบว่ามีการระบุ ID ผู้ป่วยใน URL หรือไม่
+        const urlParams = new URLSearchParams(window.location.search);
+        const patientId = urlParams.get('patientId');
+        
+        if (patientId) {
+          // ดึงข้อมูลผู้ป่วยจาก API
+          try {
+            const patientData = await callAPI(`/patients/${patientId}`);
+            if (patientData && !patientData.error) {
+              currentPatient = patientData.patient;
+              displayPatientDetails(currentPatient);
+              
+              // ดึงประวัติการสั่งยา
+              const medHistory = await getMedicationHistory(patientId);
+              if (medHistory && medHistory.medications) {
+                displayMedicationHistory(medHistory.medications);
+              }
+            }
+          } catch (error) {
+            console.error('Error fetching patient data:', error);
+          }
+        }
+        
+      } catch (error) {
+        console.error('Error initializing history page:', error);
+      }
+    });
+  </script>
+</body>
+</html>

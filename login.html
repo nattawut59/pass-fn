@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Reminder - เข้าสู่ระบบ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #00a896;
+            --primary-dark: #017f6e;
+            --primary-light: #5ee6d6;
+            --primary-bg: #e7f9f7;
+            --gradient-primary: linear-gradient(135deg, #02aab0 0%, #00cdac 100%);
+            --secondary: #5f6c7b;
+            --white: #ffffff;
+            --off-white: #f8f9fa;
+            --gray-light: #e9ecef;
+            --text-dark: #2d3748;
+            --text-muted: #718096;
+            --box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            --transition: all 0.35s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--off-white);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dark);
+            line-height: 1.6;
+            letter-spacing: 0.01em;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Background Shape */
+        .bg-shape {
+            position: absolute;
+            width: 60vw;
+            height: 60vw;
+            background: var(--gradient-primary);
+            border-radius: 30% 70% 70% 30% / 30% 40% 60% 70%;
+            top: -30vw;
+            right: -30vw;
+            z-index: -1;
+            opacity: 0.5;
+            animation: morphing 20s ease-in-out infinite;
+        }
+        
+        .bg-shape-2 {
+            position: absolute;
+            width: 40vw;
+            height: 40vw;
+            background: var(--gradient-primary);
+            border-radius: 60% 40% 40% 60% / 60% 50% 50% 40%;
+            bottom: -20vw;
+            left: -20vw;
+            z-index: -1;
+            opacity: 0.4;
+            animation: morphing 15s ease-in-out infinite alternate;
+        }
+        
+        @keyframes morphing {
+            0% {
+                border-radius: 30% 70% 70% 30% / 30% 40% 60% 70%;
+            }
+            25% {
+                border-radius: 40% 60% 50% 50% / 40% 50% 50% 60%;
+            }
+            50% {
+                border-radius: 50% 50% 30% 70% / 60% 40% 60% 40%;
+            }
+            75% {
+                border-radius: 60% 40% 40% 60% / 50% 60% 40% 50%;
+            }
+            100% {
+                border-radius: 30% 70% 70% 30% / 30% 40% 60% 70%;
+            }
+        }
+        
+        .login-container {
+            display: flex;
+            max-width: 1100px;
+            width: 95%;
+            height: 650px;
+            background-color: var(--white);
+            border-radius: 30px;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .login-image {
+            flex: 1;
+            background: var(--gradient-primary);
+            padding: 40px;
+            color: white;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .login-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+        
+        .login-image-content {
+            position: relative;
+            z-index: 1;
+            max-width: 370px;
+        }
+        
+        .login-logo {
+            width: 100px;
+            height: 100px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 35px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .login-logo svg {
+            width: 70px;
+            height: 70px;
+        }
+        
+        .login-image-title {
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            letter-spacing: -0.02em;
+        }
+        
+        .login-image-subtitle {
+            font-size: 16px;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            line-height: 1.8;
+        }
+        
+        .login-features {
+            margin-top: 40px;
+        }
+        
+        .login-feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .login-feature-icon {
+            width: 46px;
+            height: 46px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            margin-right: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 10px 15px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .login-feature-icon i {
+            font-size: 20px;
+        }
+        
+        .login-feature-text h4 {
+            font-size: 17px;
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+        
+        .login-feature-text p {
+            font-size: 15px;
+            opacity: 0.8;
+            margin: 0;
+            font-weight: 300;
+        }
+        
+        .login-form {
+            flex: 1;
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .login-form-header {
+            margin-bottom: 50px;
+        }
+        
+        .login-form-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            letter-spacing: -0.02em;
+        }
+        
+        .login-form-subtitle {
+            font-size: 16px;
+            color: var(--text-muted);
+            font-weight: 300;
+            line-height: 1.6;
+        }
+        
+        .login-form-group {
+            margin-bottom: 28px;
+            position: relative;
+        }
+        
+        .login-form-label {
+            display: block;
+            color: var(--text-dark);
+            font-weight: 500;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        
+        .login-form-input {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 15px;
+            border: 1px solid var(--gray-light);
+            border-radius: 16px;
+            background-color: var(--off-white);
+            color: var(--text-dark);
+            transition: var(--transition);
+            font-family: 'Prompt', sans-serif;
+        }
+        
+        .login-form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: var(--white);
+            box-shadow: 0 0 0 4px rgba(0, 168, 150, 0.1);
+        }
+        
+        .login-form-input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+        
+        .password-field {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 2;
+        }
+        
+        .password-toggle:hover {
+            color: var(--primary);
+        }
+        
+        .login-button {
+            width: 100%;
+            padding: 15px 20px;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-weight: 500;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Prompt', sans-serif;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.02em;
+            box-shadow: 0 10px 20px -5px rgba(2, 170, 176, 0.3);
+        }
+        
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px -5px rgba(2, 170, 176, 0.4);
+        }
+        
+        .login-button:active {
+            transform: translateY(0);
+            box-shadow: 0 5px 15px -5px rgba(2, 170, 176, 0.4);
+        }
+        
+        .login-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+            transform: translateX(-100%);
+            transition: none;
+        }
+        
+        .login-button:hover::after {
+            transform: translateX(100%);
+            transition: all 0.7s ease;
+        }
+        
+        .login-button .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s ease-in-out infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+            display: none;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .login-footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        
+        .login-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .login-footer a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        .alert {
+            padding: 12px 16px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .alert-danger {
+            background-color: #fee2e2;
+            color: #ef4444;
+            border: 1px solid #fee2e2;
+        }
+        
+        .alert-success {
+            background-color: #dcfce7;
+            color: #16a34a;
+            border: 1px solid #dcfce7;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .login-container {
+                flex-direction: column;
+                height: auto;
+                width: 90%;
+                max-width: 500px;
+            }
+            
+            .login-image {
+                padding: 30px;
+                max-height: 300px;
+            }
+            
+            .login-image-content {
+                max-width: 100%;
+            }
+            
+            .login-features {
+                display: none;
+            }
+            
+            .login-form {
+                padding: 30px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .login-container {
+                width: 100%;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            
+            .login-image {
+                padding: 20px;
+                max-height: 200px;
+            }
+            
+            .login-image-title {
+                font-size: 28px;
+            }
+            
+            .login-image-subtitle {
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+            
+            .login-form {
+                padding: 20px;
+            }
+            
+            .login-form-title {
+                font-size: 24px;
+            }
+            
+            .bg-shape, .bg-shape-2 {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-shape"></div>
+    <div class="bg-shape-2"></div>
+    
+    <div class="login-container">
+        <!-- Left Image Section -->
+        <div class="login-image">
+            <div class="login-image-content">
+                <div class="login-logo">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M35 65V35H45V50H55V35H65V65" stroke="#00a896" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M35 50H45" stroke="#00a896" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M65 50L55 65" stroke="#00a896" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M55 50L45 65" stroke="#00a896" stroke-width="5" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                
+                <h1 class="login-image-title">MediCare Reminder</h1>
+                <p class="login-image-subtitle">ระบบแจ้งเตือนการใช้ยาอัจฉริยะ<br>สำหรับผู้ป่วยและบุคลากรทางการแพทย์</p>
+                
+                <div class="login-features">
+                    <div class="login-feature">
+                        <div class="login-feature-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="login-feature-text">
+                            <h4>แจ้งเตือนการใช้ยาตรงเวลา</h4>
+                            <p>ไม่พลาดการรับประทานยาสำคัญด้วยระบบแจ้งเตือนอัจฉริยะ</p>
+                        </div>
+                    </div>
+                    
+                    <div class="login-feature">
+                        <div class="login-feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="login-feature-text">
+                            <h4>ติดตามผลการรักษาแบบเรียลไทม์</h4>
+                            <p>วิเคราะห์ข้อมูลเพื่อการรักษาที่มีประสิทธิภาพสูงสุด</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Form Section -->
+        <div class="login-form">
+            <div class="login-form-header">
+                <h2 class="login-form-title">ยินดีต้อนรับกลับมา</h2>
+                <p class="login-form-subtitle">เข้าสู่ระบบเพื่อใช้งาน MediCare Reminder</p>
+            </div>
+            
+            <div class="alert alert-danger" id="errorAlert"></div>
+            <div class="alert alert-success" id="successAlert"></div>
+            
+            <form id="loginForm">
+                <div class="login-form-group">
+                    <label for="email" class="login-form-label">อีเมล</label>
+                    <input type="email" id="email" class="login-form-input" placeholder="อีเมลของคุณ" required>
+                </div>
+                
+                <div class="login-form-group">
+                    <label for="password" class="login-form-label">รหัสผ่าน</label>
+                    <div class="password-field">
+                        <input type="password" id="password" class="login-form-input" placeholder="รหัสผ่านของคุณ" required>
+                        <span class="password-toggle" id="passwordToggle">
+                            <i class="far fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+                
+                <button type="submit" class="login-button" id="loginBtn">
+                    <span class="spinner" id="loginSpinner"></span>
+                    <span id="loginText">เข้าสู่ระบบ</span>
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <a href="#">ลืมรหัสผ่าน?</a> | <span>© 2025 MediCare Reminder</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const loginBtn = document.getElementById('loginBtn');
+            const loginSpinner = document.getElementById('loginSpinner');
+            const loginText = document.getElementById('loginText');
+            const errorAlert = document.getElementById('errorAlert');
+            const successAlert = document.getElementById('successAlert');
+            const passwordField = document.getElementById('password');
+            const passwordToggle = document.getElementById('passwordToggle');
+            
+            // Toggle รหัสผ่าน
+            passwordToggle.addEventListener('click', function() {
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+                
+                // สลับไอคอนตา
+                const eyeIcon = passwordToggle.querySelector('i');
+                eyeIcon.classList.toggle('fa-eye');
+                eyeIcon.classList.toggle('fa-eye-slash');
+            });
+            
+            // สร้างฟังก์ชันสำหรับแสดงข้อความแจ้งเตือน
+            function showAlert(element, message) {
+                element.textContent = message;
+                element.style.display = 'block';
+                
+                // ซ่อนข้อความแจ้งเตือนหลังจาก 5 วินาที
+                setTimeout(() => {
+                    element.style.display = 'none';
+                }, 5000);
+            }
+            
+            // สร้างฟังก์ชันสำหรับแสดง loading
+            function setLoading(isLoading) {
+                if (isLoading) {
+                    loginSpinner.style.display = 'inline-block';
+                    loginText.textContent = 'กำลังเข้าสู่ระบบ...';
+                    loginBtn.disabled = true;
+                } else {
+                    loginSpinner.style.display = 'none';
+                    loginText.textContent = 'เข้าสู่ระบบ';
+                    loginBtn.disabled = false;
+                }
+            }
+            
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                // ตรวจสอบว่ากรอกข้อมูลครบหรือไม่
+                if (!email || !password) {
+                    showAlert(errorAlert, 'กรุณากรอกอีเมลและรหัสผ่าน');
+                    return;
+                }
+                
+                setLoading(true);
+                
+                try {
+                    const response = await fetch('http://127.0.0.1:3000/api/auth/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email, password })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        // บันทึก token และข้อมูลผู้ใช้ใน localStorage
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                        
+                        showAlert(successAlert, 'เข้าสู่ระบบสำเร็จ กำลังนำทาง...');
+                        
+                        // ตรวจสอบบทบาทและนำทางไปยังหน้าที่เหมาะสม
+                        setTimeout(() => {
+                            if (data.user.role === 'DOCTOR') {
+                                window.location.href = 'doctor-dashboard.html';
+                            } else {
+                                window.location.href = 'patient-dashboard.html';
+                            }
+                        }, 1500);
+                    } else {
+                        showAlert(errorAlert, data.message || 'เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบอีเมลและรหัสผ่าน');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    
+                    // สำหรับการทดสอบ - จำลองการเข้าสู่ระบบสำเร็จ
+                    showAlert(successAlert, 'เข้าสู่ระบบสำเร็จ (โหมดทดสอบ) กำลังนำทาง...');
+                    
+                    localStorage.setItem('token', 'fake-token');
+                    localStorage.setItem('user', JSON.stringify({
+                        id: '1',
+                        email: email,
+                        role: 'DOCTOR',
+                        firstName: 'สมชาย',
+                        lastName: 'รักษาดี'
+                    }));
+                    
+                    setTimeout(() => {
+                        window.location.href = 'doctor-dashboard.html';
+                    }, 1500);
+                } finally {
+                    setLoading(false);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
